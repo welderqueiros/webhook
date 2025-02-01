@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enviar Mensagem para Webhook</title>
-    <style>
-        /* Seus estilos CSS aqui */
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar Mensagem para Webhook</title>
+  <style>
+    /* Estilo básico pra deixar a parada visual */
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 5px; }
+    textarea { width: 100%; padding: 10px; font-size: 1rem; }
+    button { padding: 10px 20px; font-size: 1rem; margin-top: 10px; cursor: pointer; }
+    .message { margin-top: 15px; padding: 10px; border-radius: 3px; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Enviar Mensagem para Webhook</h1>
-        <label for="message">Mensagem:</label>
-        <textarea id="message" rows="4" placeholder="Escreva sua mensagem aqui"></textarea>
-
-        <button id="sendButton">Enviar Mensagem</button>
-
-        <!-- Área para exibir mensagens -->
-        <div id="messageArea" class="message"></div>
-    </div>
-
-    <!-- Certifique-se de que o script.js está sendo carregado corretamente -->
-    <script src="/script.js"></script>
+  <div class="container">
+    <h1>Enviar Mensagem para Webhook</h1>
+    <label for="message">Mensagem:</label>
+    <textarea id="message" rows="4" placeholder="Escreva sua mensagem aqui"></textarea>
+    <button id="sendButton">Enviar Mensagem</button>
+    <div id="messageArea" class="message"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
