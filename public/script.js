@@ -13,23 +13,22 @@ async function sendMessage() {
     }
 
     try {
-        // Usa a variável de ambiente da Vercel para a URL do webhook
-        const webhookUrl = process.env.WEBHOOK_URL;
-
-        // Envia a mensagem para o webhook
-        const response = await fetch(webhookUrl, {
+        // Envia a mensagem para a função serverless
+        const response = await fetch('/api/sendMessage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ content: message })
+            body: JSON.stringify({ message })
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            messageArea.innerText = "Mensagem enviada com sucesso!";
+            messageArea.innerText = result.message;
             messageArea.classList.add("success");
         } else {
-            messageArea.innerText = "Erro ao enviar a mensagem para o webhook.";
+            messageArea.innerText = result.error;
             messageArea.classList.add("error");
         }
     } catch (error) {
