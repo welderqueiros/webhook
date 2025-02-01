@@ -1,3 +1,5 @@
+document.getElementById('sendButton').addEventListener('click', sendMessage);
+
 async function sendMessage() {
     const message = document.getElementById('message').value;
     const messageArea = document.getElementById('messageArea');

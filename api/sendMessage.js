@@ -1,4 +1,5 @@
-// api/sendMessage.js
+const fetch = require('node-fetch');
+
 module.exports = async (req, res) => {
     const { message } = req.body;
 
