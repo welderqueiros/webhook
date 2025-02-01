@@ -56,10 +56,13 @@
 <body>
     <div class="container">
         <h1>Enviar Mensagem para Webhook</h1>
+        <label for="webhookUrl">URL do Webhook:</label>
+        <input type="text" id="webhookUrl" placeholder="Cole a URL do webhook aqui">
+
         <label for="message">Mensagem:</label>
         <textarea id="message" rows="4" placeholder="Escreva sua mensagem aqui"></textarea>
 
-        <button id="sendButton">Enviar Mensagem</button>
+        <button onclick="sendMessage()">Enviar Mensagem</button>
 
         <!-- Área para exibir mensagens -->
         <div id="messageArea" class="message"></div>
@@ -67,9 +70,8 @@
 
     <!-- Script JavaScript direto no HTML -->
     <script>
-        document.getElementById('sendButton').addEventListener('click', sendMessage);
-
         async function sendMessage() {
+            const webhookUrl = document.getElementById('webhookUrl').value;
             const message = document.getElementById('message').value;
             const messageArea = document.getElementById('messageArea');
 
@@ -77,29 +79,27 @@
             messageArea.innerText = "";
             messageArea.className = "message";
 
-            if (!message) {
-                messageArea.innerText = "Por favor, escreva uma mensagem.";
+            if (!webhookUrl || !message) {
+                messageArea.innerText = "Por favor, preencha a URL do webhook e a mensagem.";
                 messageArea.classList.add("error");
                 return;
             }
 
             try {
-                // Envia a mensagem para a função serverless
-                const response = await fetch('/api/sendMessage', {
+                // Envia a mensagem diretamente para o webhook
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ message })
+                    body: JSON.stringify({ content: message })
                 });
 
-                const result = await response.json();
-
                 if (response.ok) {
-                    messageArea.innerText = result.message;
+                    messageArea.innerText = "Mensagem enviada com sucesso!";
                     messageArea.classList.add("success");
                 } else {
-                    messageArea.innerText = result.error;
+                    messageArea.innerText = "Erro ao enviar a mensagem para o webhook.";
                     messageArea.classList.add("error");
                 }
             } catch (error) {
