@@ -91,13 +91,19 @@
                     body: JSON.stringify({ message })
                 });
 
-                const result = await response.json();
+                let result = {};
+                const text = await response.text();
+                try {
+                    result = text ? JSON.parse(text) : {};
+                } catch (error) {
+                    result = { message: text };
+                }
 
                 if (response.ok) {
-                    messageArea.innerText = result.message;
+                    messageArea.innerText = result.message || "Mensagem enviada com sucesso!";
                     messageArea.classList.add("success");
                 } else {
-                    messageArea.innerText = result.message;
+                    messageArea.innerText = result.message || "Erro ao enviar a mensagem para o webhook.";
                     messageArea.classList.add("error");
                 }
             } catch (error) {
