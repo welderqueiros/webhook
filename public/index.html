@@ -18,7 +18,7 @@
             margin-bottom: 8px;
             font-weight: bold;
         }
-        input, textarea, button {
+        textarea, button {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -56,8 +56,6 @@
 <body>
     <div class="container">
         <h1>Enviar Mensagem para Webhook</h1>
-        <label for="webhookUrl">URL do Webhook:</label>
-        <input type="text" id="webhookUrl" placeholder="Cole a URL do webhook aqui">
 
         <label for="message">Mensagem:</label>
         <textarea id="message" rows="4" placeholder="Escreva sua mensagem aqui"></textarea>
@@ -71,7 +69,6 @@
     <!-- Script JavaScript direto no HTML -->
     <script>
         async function sendMessage() {
-            const webhookUrl = document.getElementById('webhookUrl').value;
             const message = document.getElementById('message').value;
             const messageArea = document.getElementById('messageArea');
 
@@ -79,27 +76,28 @@
             messageArea.innerText = "";
             messageArea.className = "message";
 
-            if (!webhookUrl || !message) {
-                messageArea.innerText = "Por favor, preencha a URL do webhook e a mensagem.";
+            if (!message) {
+                messageArea.innerText = "Por favor, preencha a mensagem.";
                 messageArea.classList.add("error");
                 return;
             }
 
             try {
-                // Envia a mensagem diretamente para o webhook
-                const response = await fetch(webhookUrl, {
+                const response = await fetch("/api/sendMessage", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ content: message })
+                    body: JSON.stringify({ message })
                 });
 
+                const result = await response.json();
+
                 if (response.ok) {
-                    messageArea.innerText = "Mensagem enviada com sucesso!";
+                    messageArea.innerText = result.message;
                     messageArea.classList.add("success");
                 } else {
-                    messageArea.innerText = "Erro ao enviar a mensagem para o webhook.";
+                    messageArea.innerText = result.message;
                     messageArea.classList.add("error");
                 }
             } catch (error) {

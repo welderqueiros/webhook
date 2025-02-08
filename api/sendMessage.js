@@ -1,38 +1,39 @@
-const fetch = require('node-fetch');
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+      res.status(405).json({ message: 'Method not allowed' });
+      return;
+    }
+    
     const { message } = req.body;
-
-    console.log('Mensagem recebida:', message); // Log da mensagem recebida
-
+    
     if (!message) {
-        return res.status(400).json({ error: 'Por favor, forneça uma mensagem.' });
+      res.status(400).json({ message: 'Mensagem não fornecida' });
+      return;
     }
-
+    
+    const webhookUrl = process.env.WEBHOOK_URL;
+    
+    if (!webhookUrl) {
+      res.status(500).json({ message: 'Erro de configuração do servidor' });
+      return;
+    }
+    
     try {
-        // URL do webhook (armazenada como variável de ambiente na Vercel)
-        const webhookUrl = process.env.WEBHOOK_URL;
-
-        console.log('Enviando mensagem para o webhook:', webhookUrl); // Log da URL do webhook
-
-        // Envia a mensagem para o webhook
-        const response = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ content: message })
-        });
-
-        console.log('Resposta do webhook:', response.status, response.statusText); // Log da resposta do webhook
-
-        if (response.ok) {
-            res.json({ success: true, message: 'Mensagem enviada com sucesso!' });
-        } else {
-            res.status(500).json({ error: 'Erro ao enviar a mensagem para o webhook.' });
-        }
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: message })
+      });
+    
+      if (response.ok) {
+        res.status(200).json({ message: 'Mensagem enviada com sucesso!' });
+      } else {
+        res.status(response.status).json({ message: 'Erro ao enviar a mensagem para o webhook.' });
+      }
     } catch (error) {
-        console.error('Erro ao enviar a mensagem:', error); // Log de erro
-        res.status(500).json({ error: 'Erro ao enviar a mensagem: ' + error.message });
+      res.status(500).json({ message: 'Erro ao enviar a mensagem: ' + error.message });
     }
-};
+  }
+  
